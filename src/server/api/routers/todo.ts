@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { createInput, toggleInput, updateInput } from "~/server/types";
-
+import { TRPCError } from "@trpc/server";
 //すべてのctx.prismaをctx.dbに変更
 //多分/src/server/auth.tsでimport { db } from "~/server/db"にしてることが原因?
 
@@ -24,7 +24,12 @@ export const todoRouter = createTRPCRouter({
    }));
  }),
  create: protectedProcedure.input(createInput).mutation(({ ctx, input }) => {
-   return ctx.db.todo.create({
+    //楽観的更新のエラー確認
+    /*throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "failed to create todo",
+    });*/
+    return ctx.db.todo.create({
      data: {
        text: input,
        user: {
@@ -36,7 +41,12 @@ export const todoRouter = createTRPCRouter({
    });
  }),
  toggle: protectedProcedure.input(toggleInput).mutation(({ ctx, input }) => {
-   const { id, is_completed } = input;
+  //完了/未完の楽観的更新確認
+  /*throw new TRPCError({
+    code:"INTERNAL_SERVER_ERROR",
+    message:"failed to create todo",
+  })*/
+  const { id, is_completed } = input;
    return ctx.db.todo.update({
      where: {
        id,
@@ -47,7 +57,12 @@ export const todoRouter = createTRPCRouter({
    });
  }),
  update: protectedProcedure.input(updateInput).mutation(({ ctx, input }) => {
-   const { id, text } = input;
+  //編集エラー確認
+  /*throw new TRPCError({
+    code: "INTERNAL_SERVER_ERROR",
+    message:"failed to update todo"
+  })*/ 
+  const { id, text } = input;
    return ctx.db.todo.update({
      where: {
        id,
@@ -58,7 +73,12 @@ export const todoRouter = createTRPCRouter({
    });
  }),
  delete: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
-   return ctx.db.todo.delete({
+  //削除エラー確認
+  /*throw new TRPCError({
+    code:"INTERNAL_SERVER_ERROR",
+    message: "failed to delete todo"
+  });*/
+  return ctx.db.todo.delete({
      where: {
        id: input,
      },

@@ -3,8 +3,16 @@ import { Todo } from "~/components/Todo";
 
 export function Todos() {
   const { data: todos, isLoading, isError } = api.todo.all.useQuery();
-
+  /*todosに格納されるデータは以下
+  {
+    id: string;
+    text: string;
+    isCompleted: boolean;
+  }[]| undefined
+   */
+  //Todoの取得に失敗した場合、todosはundefined⇒api/routers/todo.tsで定義したルータが出力する型と一致
   if (isLoading)
+    //ロード中
     return (
       <div className="flex items-center justify-center">
         <div
@@ -15,6 +23,7 @@ export function Todos() {
       </div>
     );
   if (isError)
+    //エラー発生
     return (
       <div className="flex items-center justify-center">
         <p className="mt-10 ml-4 text-xl">Error fetching todos</p>
