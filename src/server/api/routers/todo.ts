@@ -2,7 +2,12 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { createInput, toggleInput, updateInput } from "~/server/types";
 
+//すべてのctx.prismaをctx.dbに変更
+//多分/src/server/auth.tsでimport { db } from "~/server/db"にしてることが原因?
+
 export const todoRouter = createTRPCRouter({
+//以下、動作の定義を実行
+//すべてtodo.?で実行される
  all: protectedProcedure.query(async ({ ctx }) => {
    const todos = await ctx.db.todo.findMany({
      where: {

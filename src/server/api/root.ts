@@ -1,4 +1,5 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+//作成したルーターをサーバーのプライマリルーターに渡す
 import { todoRouter } from "~/server/api/routers/todo";
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { todoRouter } from "~/server/api/routers/todo";
 
 //定義したルータをサーバのプライマリルーターに渡す
 export const appRouter = createTRPCRouter({
+  //作成したAPIの型定義をエクスポート
   todo: todoRouter,
 });
 

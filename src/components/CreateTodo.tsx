@@ -1,40 +1,58 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { createInput } from "~/server/types";
+//apiの定義を渡す
 import { api } from "~/utils/api";
 
 export function CreateTodo() {
   const [newTodo, setNewTodo] = useState("");
-
+  //フォームの入力管理
+  //入力フィールド値はnewTodo, setNewTodoで状態が更新
+  //useCOntextは非推奨?
   const trpc = api.useContext();
- const { mutate } = api.todo.create.useMutation({
-   onSettled: async () => {
+  //todo作成メソッド呼び出し,Todoがデータベースに保存 
+  const { mutate } = api.todo.create.useMutation({
+   //API呼び出し後に実行、Todoリスト再度取得のため、キャッシュ無効化
+    onSettled: async () => {
+    //Todoの作成の成功・失敗の結果をTodoの一覧表反映のため
      await trpc.todo.all.invalidate();
    },
  });
 
   return (
+    //フォームの送信処理
     <form
       onSubmit={(e) => {
         e.preventDefault();
+        //新しいToDoの入力値をバリデーションチェック  
+        //createInput⇒~/server/types
+        //safeParse⇒Zodのライブラリのメソッドの1つ、types.tsで決めてた
         const result = createInput.safeParse(newTodo);
-
+        //newTodoの値が要件を満たさないとエラー
         if (!result.success) {
-          toast.error(result.error.format()._errors.join("\n"));
+           //トーストメッセージ表示
+            toast.error(result.error.format()._errors.join("\n"));
           return;
         }
+        //toast("これはカスタムメッセージです");
         mutate(newTodo);
       }}
       className="flex justify-between gap-3"
     >
+        {/*Todo入力フィールド作成*/}
       <input
         className="w-full appearance-none rounded border-gray-one py-2 px-3 leading-tight text-gray-four"
         type="text"
-        placeholder="New Todo..."
+        placeholder="入力を待ってます..."
         name="new-todo"
         id="new-todo"
+        //値はnewTodoへリアルタイムパディング
+        //これは更新後のvalue
         value={newTodo}
+        //イベント発生時
         onChange={(e) => {
+            //newTodoの値が更新
+            //このvalueはユーザがその瞬間に入力している最新の値
           setNewTodo(e.target.value);
         }}
       />

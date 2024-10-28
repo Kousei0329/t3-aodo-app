@@ -44,6 +44,9 @@ export default {
       fontFamily: {
         sans: ["var(--font-geist-sans)", ...fontFamily.sans],
       },
+      writingMode: {
+        horizontal: 'horizontal-tb', // 横書き
+      },//追加
     },
   },
   plugins: [],

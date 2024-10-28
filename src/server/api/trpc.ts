@@ -70,6 +70,8 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  * errors on the backend.
  */
 
+//tRPCを作成してtRPCの初期化
+//インスタンスは複数あってはいけない
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
@@ -89,6 +91,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  *
  * @see https://trpc.io/docs/server/server-side-calls
  */
+//t変数のt九艇のメソッドをエクスポート
 export const createCallerFactory = t.createCallerFactory;
 
 /**
@@ -148,6 +151,8 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
+    //Zennではこれ分離させてた
+    //ユーザがログインしていることを保証するミドルウェア
     if (!ctx.session || !ctx.session.user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
