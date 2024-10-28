@@ -2,7 +2,7 @@ import { api } from "~/utils/api";
 import { Todo } from "~/components/Todo";
 
 export function Todos() {
-  const { data: todos, isLoading, isError } = api.todo.all.useQuery();
+  const { data: todos=[], isLoading, isError } = api.todo.all.useQuery();
   /*todosに格納されるデータは以下
   {
     id: string;
