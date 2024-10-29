@@ -49,6 +49,7 @@ export default function SignIn({providers,}
                     <p>ここにボタンが表示</p>
                 </div>
               ))}
+                 <p>ここにボタンが表示ver2</p>
             </div>
           </div>
         </div>
