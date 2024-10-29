@@ -46,6 +46,7 @@ export default function SignIn({providers,}
                     {/* provider.callbackUrl⇒http://localhost:3000/api/auth/signin/github*/}
                     {/*providers.type⇒oauth */}
                   </button>
+                    <p>ここにボタンが表示</p>
                 </div>
               ))}
             </div>
